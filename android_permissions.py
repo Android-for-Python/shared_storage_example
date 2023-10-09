@@ -48,8 +48,9 @@ class AndroidPermissions:
                 self.permissions = [Permission.WRITE_EXTERNAL_STORAGE]
             else:
                 # Android >= 10
-                # Permission required to see Shared files created by other apps
-                self.permissions = [Permission.READ_EXTERNAL_STORAGE]
+                # Permission required to see Shared image file
+                # created by other apps
+                self.permissions = [Permission.READ_MEDIA_IMAGES]
                 #################################################
             self.permission_status([],[])
         elif self.start_app:

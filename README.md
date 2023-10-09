@@ -4,7 +4,7 @@
 
 [Android Shared Storage Overview](https://github.com/Android-for-Python/Android-for-Python-Users#shared-storage).
 
-Note this example is written with `android.api == 32`. For newer devices the permission names have changed [see](https://github.com/Android-for-Python/Android-for-Python-Users#storage-permissions).
+Note this example is written with `android.api == 34`. For older apis the permission names are different [see](https://github.com/Android-for-Python/Android-for-Python-Users#storage-permissions).
 
 The example is the unit test for the [androidstorage4kivy](https://github.com/Android-for-Python/androidstorage4kivy/blob/main/README.md) package, as such it is probably more useful to read than to run. It includes examples of copying to and from shared storage, deleting from shared storage, and using the Android Chooser.
 
