@@ -34,8 +34,9 @@ if platform == 'android':
 #
 ###########################################################################
 
+
 class AndroidPermissions:
-    def __init__(self, start_app = None):
+    def __init__(self, start_app=None):
         self.permission_dialog_count = 0
         self.start_app = start_app
         if platform == 'android':
@@ -52,7 +53,7 @@ class AndroidPermissions:
                 # created by other apps
                 self.permissions = [Permission.READ_MEDIA_IMAGES]
                 #################################################
-            self.permission_status([],[])
+            self.permission_status([], [])
         elif self.start_app:
             self.start_app()
 
@@ -64,10 +65,10 @@ class AndroidPermissions:
             if self.start_app:
                 self.start_app()
         elif self.permission_dialog_count < 2:
-            Clock.schedule_once(self.permission_dialog)  
+            Clock.schedule_once(self.permission_dialog)
         else:
             self.no_permission_view()
-        
+
     def permission_dialog(self, dt):
         self.permission_dialog_count += 1
         request_permissions(self.permissions, self.permission_status)
@@ -75,13 +76,12 @@ class AndroidPermissions:
     @mainthread
     def no_permission_view(self):
         view = ModalView()
-        view.add_widget(Button(text='Permission NOT granted.\n\n' +\
-                               'Tap to quit app.\n\n\n' +\
-                               'If you selected "Don\'t Allow",\n' +\
-                               'enable permission with App Settings.',
+        view.add_widget(Button(text=("Permission NOT granted.\n\n"
+                                     "Tap to quit app.\n\n\n"
+                                     "If you selected \"Don\'t Allow\",\n"
+                                     "enable permission with App Settings."),
                                on_press=self.bye))
         view.open()
 
     def bye(self, instance):
-        mActivity.finishAndRemoveTask() 
-        
+        mActivity.finishAndRemoveTask()

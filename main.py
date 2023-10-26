@@ -22,22 +22,23 @@ Environment = autoclass('android.os.Environment')
 # Expect this test to likely fail on some random device.
 #######################################################################
 
+
 class SharedStorageExample(App):
 
     def build(self):
-        Window.bind(on_keyboard = self.quit_app)
+        Window.bind(on_keyboard=self.quit_app)
         # create chooser listener
         self.chooser = Chooser(self.chooser_callback)
-  
+
         # cleanup from last time if Android didn't
         temp = SharedStorage().get_cache_dir()
         if temp and exists(temp):
             rmtree(temp)
 
         # layout
-        self.label = Label(text = 'Greetings Earthlings')
-        self.button = Button(text = 'Choose an image file',
-                             on_press = self.chooser_start,
+        self.label = Label(text='Greetings Earthlings')
+        self.button = Button(text='Choose an image file',
+                             on_press=self.chooser_start,
                              size_hint=(1, .15))
         self.layout = BoxLayout(orientation='vertical')
         self.layout.add_widget(self.label)
@@ -47,12 +48,11 @@ class SharedStorageExample(App):
     def on_start(self):
         self.dont_gc = AndroidPermissions(self.start_app)
 
-    def quit_app(self,window,key,*args):
+    def quit_app(self, window, key, *args):
         if key == 27:
-            mActivity.finishAndRemoveTask() 
-            return True   
-        else:
-            return False    
+            mActivity.finishAndRemoveTask()
+            return True
+        return False
 
     def start_app(self):
         self.dont_gc = None
@@ -65,34 +65,34 @@ class SharedStorageExample(App):
         ############################################################
         # copy to app shared storage   copy_to_shared(private_file)
         ############################################################
-        
+
         share0 = ss.copy_to_shared('./test.txt')
         share1 = ss.copy_to_shared('test.txt',
-                                   filepath = 'a/b/test1.txt')
+                                   filepath='a/b/test1.txt')
         share2 = ss.copy_to_shared('test.jpg',
-                                   filepath = join('c','test1.jpg'))
+                                   filepath=join('c', 'test1.jpg'))
         share3 = ss.copy_to_shared('test.mp3')
         # For .ogg, collection depends on the Android version
         # On newer devices default is DIRECTORY_MUSIC, so DIRECTORY_ALARMS
         # is a legal place.
         # On older devices default is DIRECTORY_DOCUMENTS, so DIRECTORY_ALARMS
         # is not legal and will go to the default, see test 'path4' below.
-        share4 = ss.copy_to_shared('test.ogg', 
-                                   collection = Environment.DIRECTORY_ALARMS)
+        share4 = ss.copy_to_shared('test.ogg',
+                                   collection=Environment.DIRECTORY_ALARMS)
         share5 = ss.copy_to_shared('test.mp4')
         # Illegal collection names for .mp4 default to the automatic
         # collection name DIRECTORY_MOVIES
         share6 = ss.copy_to_shared('test.mp4',
-                                   collection = 'Video',
-                                   filepath = 'renamed.mp4')
+                                   collection='Video',
+                                   filepath='renamed.mp4')
         share7 = ss.copy_to_shared('test.mp4',
-                                   collection = None,
-                                   filepath = 'newname.mp4')
+                                   collection=None,
+                                   filepath='newname.mp4')
 
         ################################################################
         # copy from app shared storage    copy_from_shared(shared_file)
         ################################################################
-        
+
         path0 = ss.copy_from_shared(share0)
         path1 = ss.copy_from_shared(share1)
         path2 = ss.copy_from_shared(join(Environment.DIRECTORY_PICTURES,
@@ -107,7 +107,7 @@ class SharedStorageExample(App):
         else:
             path4 = ss.copy_from_shared(join(Environment.DIRECTORY_DOCUMENTS,
                                              app_title, 'test.ogg'))
-            
+
         path5 = ss.copy_from_shared(share5)
         path6 = ss.copy_from_shared(join(Environment.DIRECTORY_MOVIES,
                                          app_title, 'renamed.mp4'))
@@ -116,7 +116,7 @@ class SharedStorageExample(App):
         ###############################################################
         # Delete from App Shared Storage    delete_shared(shared_file)
         ###############################################################
-        
+
         # Keep two (share0, share1) to test persistence between app installs
         del2 = ss.delete_shared(share2)
         del3 = ss.delete_shared(share3)
@@ -125,12 +125,12 @@ class SharedStorageExample(App):
                                      app_title, 'test.mp4'))
         del6 = ss.delete_shared(share6)
         del7 = ss.delete_shared(join(Environment.DIRECTORY_MOVIES,
-                                     app_title,'newname.mp4'))
+                                     app_title, 'newname.mp4'))
 
         #############################################################
         # Copy file created by other app to this app then delete copy
         #############################################################
-        
+
         # on my phones CHART_4.jpg exists
         path8 = ss.copy_from_shared(join(Environment.DIRECTORY_PICTURES,
                                          'CHART_4.jpg'))
@@ -140,50 +140,52 @@ class SharedStorageExample(App):
         #################################
         # Report Results
         #################################
-        self.append("copy_to_shared test.txt       " + str(share0 != None))
-        self.append("copy_to_shared a/b/test.txt:  " + str(share1 != None))
-        self.append("copy_to_shared c/test.jpg     " + str(share2 != None))
-        self.append("copy_to_shared test.mp3:      " + str(share3 != None))
-        self.append("copy_to_shared test.ogg:      " + str(share4 != None))
-        self.append("copy_to_shared test.mp4:      " + str(share5 != None))
-        self.append("copy_to_shared renamed.mp4:   " + str(share6 != None))
-        self.append("copy_to_shared newname.mp4:   " + str(share7 != None))
-        
-        self.append("copy_from_shared test.txt     " + str(path0 != None and\
-                                                           exists(path0)))
-        self.append("copy_from_shared a/b/test.txt " + str(path1 != None and\
-                                                           exists(path1)))
-        self.append("copy_from_shared c/test1.jpg  " + str(path2 != None and\
-                                                           exists(path2)))
-        self.append("copy_from_shared test.mp3     " + str(path3 != None and\
-                                                           exists(path3)))
-        self.append("copy_from_shared test.ogg     " + str(path4 != None and\
-                                                           exists(path4)))
-        self.append("copy_from_shared test.mp4     " + str(path5 != None and\
-                                                           exists(path5)))
-        self.append("copy_from_shared renamed.mp4  " + str(path6 != None and\
-                                                           exists(path6)))
-        self.append("copy_from_shared newname.mp4  " + str(path7 != None and\
-                                                           exists(path6)))
-        
-        self.append("deleted c/test.jpg     " + str(del2))
-        self.append("deleted test.mp3       " + str(del3))
-        self.append("deleted test.ogg       " + str(del4))
-        self.append("deleted test.mp4       " + str(del5))
-        self.append("deleted renamed.mp4    " + str(del6))
-        self.append("deleted newname.mp4    " + str(del7))
+        self.append("copy_to_shared test.txt       "
+                    f"{share0 is not None}")
+        self.append(f"copy_to_shared a/b/test.txt: {share1 is not None}")
+        self.append(f"copy_to_shared c/test.jpg    {share2 is not None}")
+        self.append(f"copy_to_shared test.mp3:     {share3 is not None}")
+        self.append(f"copy_to_shared test.ogg:     {share4 is not None}")
+        self.append(f"copy_to_shared test.mp4:     {share5 is not None}")
+        self.append(f"copy_to_shared renamed.mp4:  {share6 is not None}")
+        self.append(f"copy_to_shared newname.mp4:  {share7 is not None}")
 
-        self.append("copy_from_shared other app    " + str(path8 != None and\
-                                                    exists(path8)))
-        self.append("copy_to_shared this app       " + str(share8 != None))
+        self.append("copy_from_shared test.txt     "
+                    f"{path0 is not None and exists(path0)}")
+        self.append("copy_from_shared a/b/test.txt "
+                    f"{path1 is not None and exists(path1)}")
+        self.append("copy_from_shared c/test1.jpg  "
+                    f"{path2 is not None and exists(path2)}")
+        self.append("copy_from_shared test.mp3     "
+                    f"{path3 is not None and exists(path3)}")
+        self.append("copy_from_shared test.ogg     "
+                    f"{path4 is not None and exists(path4)}")
+        self.append("copy_from_shared test.mp4     "
+                    f"{path5 is not None and exists(path5)}")
+        self.append("copy_from_shared renamed.mp4  "
+                    f"{path6 is not None and exists(path6)}")
+        self.append("copy_from_shared newname.mp4  "
+                    f"{path7 != None and exists(path6)}")
+
+        self.append(f"deleted c/test.jpg     {del2}")
+        self.append(f"deleted test.mp3       {del3}")
+        self.append(f"deleted test.ogg       {del4}")
+        self.append(f"deleted test.mp4       {del5}")
+        self.append(f"deleted renamed.mp4    {del6}")
+        self.append(f"deleted newname.mp4    {del7}")
+
+        self.append("copy_from_shared other app    "
+                    f"{path8 is not None and exists(path8)}")
+        self.append("copy_to_shared this app       "
+                    f"{share8 is not None}")
         self.append("delete copy from other " + str(del8))
         self.display()
 
     # Chooser interface
-    def chooser_start(self,bt):
+    def chooser_start(self, bt):
         self.chooser.choose_content("image/*")
 
-    def chooser_callback(self,uri_list):
+    def chooser_callback(self, uri_list):
         try:
             ss = SharedStorage()
             for uri in uri_list:
@@ -192,12 +194,11 @@ class SharedStorageExample(App):
                 if path:
                     # then to app shared
                     shared = ss.copy_to_shared(path)
-                    self.append("Result copied to app shared "+\
-                                str(exists(path) and shared != None))
+                    self.append("Result copied to app shared "
+                                f"{str(exists(path) and shared is not None)}")
             self.display()
         except Exception as e:
-            Logger.warning('SharedStorageExample.chooser_callback():')
-            Logger.warning(str(e))
+            Logger.warning('SharedStorageExample.chooser_callback(): %s', e)
 
     # Label text
     def append(self, name):
@@ -209,5 +210,6 @@ class SharedStorageExample(App):
             self.label.text = ''
             for r in self.label_lines:
                 self.label.text += fill(r, 40) + '\n'
+
 
 SharedStorageExample().run()
