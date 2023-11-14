@@ -2,6 +2,8 @@
 
 *Basic Android shared storage usage*
 
+**2023-11-13 This repository is archived.**
+
 [Android Shared Storage Overview](https://github.com/Android-for-Python/Android-for-Python-Users#shared-storage).
 
 Note this example is written with `android.api == 34`. For older apis the permission names are different [see](https://github.com/Android-for-Python/Android-for-Python-Users#storage-permissions).
